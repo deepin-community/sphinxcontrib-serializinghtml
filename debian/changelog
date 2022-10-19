@@ -1,0 +1,33 @@
+sphinxcontrib-serializinghtml (1.1.5-2) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sun, 15 Aug 2021 20:57:16 +0300
+
+sphinxcontrib-serializinghtml (1.1.5-1) experimental; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/control: Update Maintainer field with new Debian Python Team
+    contact address.
+  * d/control: Update Vcs-* fields with new Debian Python Team Salsa
+    layout.
+
+  [ Dmitry Shachnev ]
+  * New upstream release.
+  * Add sphinxcontrib_serializinghtml.egg-info to debian/clean.
+  * Update to debhelper compat level 13.
+  * Bump Standards-Version to 4.5.1, no changes needed.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 27 May 2021 15:25:39 +0300
+
+sphinxcontrib-serializinghtml (1.1.4-2) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Wed, 15 Apr 2020 21:20:15 +0300
+
+sphinxcontrib-serializinghtml (1.1.4-1) experimental; urgency=medium
+
+  * Initial release (closes: #955222).
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 28 Mar 2020 19:59:33 +0300

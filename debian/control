@@ -1,0 +1,28 @@
+Source: sphinxcontrib-serializinghtml
+Section: python
+Priority: optional
+Maintainer: Debian Python Team <team+python@tracker.debian.org>
+Uploaders: Dmitry Shachnev <mitya57@debian.org>
+Homepage: https://github.com/sphinx-doc/sphinxcontrib-serializinghtml
+Build-Depends: debhelper-compat (= 13),
+               dh-python,
+               python3-all,
+               python3-babel,
+               python3-pytest <!nocheck>,
+               python3-setuptools,
+               python3-sphinx (>= 2.0)
+Rules-Requires-Root: no
+Standards-Version: 4.5.1
+Vcs-Git: https://salsa.debian.org/python-team/packages/sphinxcontrib-serializinghtml.git
+Vcs-Browser: https://salsa.debian.org/python-team/packages/sphinxcontrib-serializinghtml
+
+Package: python3-sphinxcontrib.serializinghtml
+Architecture: all
+Depends: python3-sphinx (>= 2.0), ${misc:Depends}, ${python3:Depends}
+Description: sphinx extension which outputs “serialized” HTML files (json and pickle)
+ This module contains two Sphinx builders, json and pickle, which produce
+ serialized HTML code. It also provides an abstract class which one may use
+ for serialization in custom formats.
+ .
+ See the “Serialization builder details” section in Sphinx documentation for
+ details on how the output looks like and how to configure it.

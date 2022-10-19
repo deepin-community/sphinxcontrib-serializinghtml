@@ -1,0 +1,22 @@
+From: Dmitry Shachnev <mitya57@debian.org>
+Date: Sat, 28 Mar 2020 20:08:26 +0300
+Subject: Expose the builders using entry points
+
+In Sphinx, we disable the sphinxcontrib.serializinghtml extension to avoid
+a circular dependency, so the builders do not get automatically registered.
+---
+ setup.cfg | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/setup.cfg b/setup.cfg
+index b06ed41..c14c225 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -29,3 +29,7 @@ exclude = .git,.tox,.venv
+ ignore_missing_imports = True
+ strict_optional = False
+ 
++[options.entry_points]
++sphinx.builders =
++    json = sphinxcontrib.serializinghtml
++    pickle = sphinxcontrib.serializinghtml
