@@ -1,3 +1,37 @@
+sphinxcontrib-serializinghtml (2.0.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump python3-sphinx build-dependency to 7.2 (for tests).
+  * Bump Standards-Version to 4.7.0, no changes needed.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Mon, 19 Aug 2024 11:07:54 +0300
+
+sphinxcontrib-serializinghtml (1.1.10-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump copyright years.
+  * Refresh debian/patches/entry_points.diff.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 20 Jan 2024 21:23:14 +0300
+
+sphinxcontrib-serializinghtml (1.1.9-1) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Update standards version to 4.6.2, no changes needed.
+
+  [ Dmitry Shachnev ]
+  * Update debian/watch:
+    - Stop checking upstream signature, PyPI dropped support for it.
+    - Use underscore instead of dash in file name.
+  * New upstream release.
+  * Build-depend on flit and pybuild-plugin-pyproject.
+  * Bump required python3-sphinx version to 5.
+  * Update entry_points.diff to use pyproject.toml.
+  * Use pybabel-python3 to compile the translation files.
+  * Bump copyright years.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 26 Aug 2023 15:51:54 +0300
+
 sphinxcontrib-serializinghtml (1.1.5-2) unstable; urgency=medium
 
   * Upload to unstable.

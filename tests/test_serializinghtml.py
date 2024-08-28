@@ -1,21 +1,20 @@
-"""
-    test_serializinghtml
-    ~~~~~~~~~~~~~~~~~~~~
+"""Test for serializinghtml extension."""
 
-    Test for serializinghtml extension.
+from __future__ import annotations
 
-    :copyright: Copyright 2007-2019 by the Sphinx team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
-"""
+from typing import TYPE_CHECKING
 
 import pytest
 
+if TYPE_CHECKING:
+    from sphinx.application import Sphinx
+
 
 @pytest.mark.sphinx('json', testroot='basic')
-def test_json(app, status, warning):
+def test_json(app: Sphinx) -> None:
     app.builder.build_all()
 
 
 @pytest.mark.sphinx('pickle', testroot='basic')
-def test_pickle(app, status, warning):
+def test_pickle(app: Sphinx) -> None:
     app.builder.build_all()

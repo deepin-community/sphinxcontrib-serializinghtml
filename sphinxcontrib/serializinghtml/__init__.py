@@ -1,15 +1,10 @@
-"""
-    sphinxcontrib.serializinghtml
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+from __future__ import annotations
 
-    :copyright: Copyright 2007-2019 by the Sphinx team, see README.
-    :license: BSD, see LICENSE for details.
-"""
-
+import os
 import pickle
 import types
 from os import path
-from typing import Any, Dict
+from typing import TYPE_CHECKING
 
 from sphinx.application import ENV_PICKLE_FILENAME, Sphinx
 from sphinx.builders.html import BuildInfo, StandaloneHTMLBuilder
@@ -17,11 +12,19 @@ from sphinx.locale import get_translation
 from sphinx.util.osutil import SEP, copyfile, ensuredir, os_path
 
 from sphinxcontrib.serializinghtml import jsonimpl
-from sphinxcontrib.serializinghtml.version import __version__
 
-if False:
-    # For type annotation
-    from typing import Any, Dict, Tuple  # NOQA
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from typing import Any, Protocol
+
+    class SerialisingImplementation(Protocol):
+        def dump(self, obj: Any, file: Any, *args: Any, **kwargs: Any) -> None: ...
+        def dumps(self, obj: Any, *args: Any, **kwargs: Any) -> str | bytes: ...
+        def load(self, file: Any, *args: Any, **kwargs: Any) -> Any: ...
+        def loads(self, data: Any, *args: Any, **kwargs: Any) -> Any: ...
+
+__version__ = '2.0.0'
+__version_info__ = (2, 0, 0)
 
 package_dir = path.abspath(path.dirname(__file__))
 
@@ -38,41 +41,43 @@ class SerializingHTMLBuilder(StandaloneHTMLBuilder):
     """
     #: the serializing implementation to use.  Set this to a module that
     #: implements a `dump`, `load`, `dumps` and `loads` functions
-    #: (pickle, simplejson etc.)
-    implementation = None  # type: Any
+    #: (pickle, json etc.)
+    implementation: SerialisingImplementation
     implementation_dumps_unicode = False
     #: additional arguments for dump()
-    additional_dump_args = ()  # type: Tuple
+    additional_dump_args: Sequence[Any] = ()
 
     #: the filename for the global context file
-    globalcontext_filename = None  # type: str
+    globalcontext_filename: str = ''
 
     supported_image_types = ['image/svg+xml', 'image/png',
                              'image/gif', 'image/jpeg']
 
-    def init(self):
-        # type: () -> None
+    def init(self) -> None:
         self.build_info = BuildInfo(self.config, self.tags)
         self.imagedir = '_images'
-        self.current_docname = None
-        self.theme = None       # no theme necessary
-        self.templates = None   # no template bridge necessary
+        self.current_docname = ''
+        self.theme = None  # type: ignore[assignment] # no theme necessary
+        self.templates = None  # no template bridge necessary
         self.init_templates()
         self.init_highlighter()
         self.init_css_files()
         self.init_js_files()
         self.use_index = self.get_builder_config('use_index', 'html')
 
-    def get_target_uri(self, docname, typ=None):
-        # type: (str, str) -> str
+    def get_target_uri(self, docname: str, typ: str | None = None) -> str:
         if docname == 'index':
             return ''
         if docname.endswith(SEP + 'index'):
             return docname[:-5]  # up to sep
         return docname + SEP
 
-    def dump_context(self, context, filename):
-        # type: (Dict, str) -> None
+    def dump_context(self, context: dict[str, Any], filename: str | os.PathLike[str]) -> None:
+        context = context.copy()
+        if 'css_files' in context:
+            context['css_files'] = [css.filename for css in context['css_files']]
+        if 'script_files' in context:
+            context['script_files'] = [js.filename for js in context['script_files']]
         if self.implementation_dumps_unicode:
             with open(filename, 'w', encoding='utf-8') as ft:
                 self.implementation.dump(context, ft, *self.additional_dump_args)
@@ -80,10 +85,10 @@ class SerializingHTMLBuilder(StandaloneHTMLBuilder):
             with open(filename, 'wb') as fb:
                 self.implementation.dump(context, fb, *self.additional_dump_args)
 
-    def handle_page(self, pagename, ctx, templatename='page.html',
-                    outfilename=None, event_arg=None):
-        # type: (str, Dict, str, str, Any) -> None
+    def handle_page(self, pagename: str, ctx: dict[str, Any], templatename: str = 'page.html',
+                    outfilename: str | None = None, event_arg: Any = None) -> None:
         ctx['current_page_name'] = pagename
+        ctx.setdefault('pathto', lambda p: p)
         self.add_sidebars(pagename, ctx)
 
         if not outfilename:
@@ -110,8 +115,7 @@ class SerializingHTMLBuilder(StandaloneHTMLBuilder):
             ensuredir(path.dirname(source_name))
             copyfile(self.env.doc2path(pagename), source_name)
 
-    def handle_finish(self):
-        # type: () -> None
+    def handle_finish(self) -> None:
         # dump the global context
         outfilename = path.join(self.outdir, self.globalcontext_filename)
         self.dump_context(self.globalcontext, outfilename)
@@ -138,7 +142,7 @@ class PickleHTMLBuilder(SerializingHTMLBuilder):
 
     implementation = pickle
     implementation_dumps_unicode = False
-    additional_dump_args = (pickle.HIGHEST_PROTOCOL,)
+    additional_dump_args: tuple[Any] = (pickle.HIGHEST_PROTOCOL,)
     indexer_format = pickle
     indexer_dumps_unicode = False
     out_suffix = '.fpickle'
@@ -162,7 +166,8 @@ class JSONHTMLBuilder(SerializingHTMLBuilder):
     searchindex_filename = 'searchindex.json'
 
 
-def setup(app: Sphinx) -> Dict[str, Any]:
+def setup(app: Sphinx) -> dict[str, Any]:
+    app.require_sphinx('5.0')
     app.setup_extension('sphinx.builders.html')
     app.add_builder(JSONHTMLBuilder)
     app.add_builder(PickleHTMLBuilder)

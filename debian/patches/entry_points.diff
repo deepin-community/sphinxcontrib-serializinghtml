@@ -5,18 +5,21 @@ Subject: Expose the builders using entry points
 In Sphinx, we disable the sphinxcontrib.serializinghtml extension to avoid
 a circular dependency, so the builders do not get automatically registered.
 ---
- setup.cfg | 4 ++++
+ pyproject.toml | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/setup.cfg b/setup.cfg
-index b06ed41..c14c225 100644
---- a/setup.cfg
-+++ b/setup.cfg
-@@ -29,3 +29,7 @@ exclude = .git,.tox,.venv
- ignore_missing_imports = True
- strict_optional = False
+diff --git a/pyproject.toml b/pyproject.toml
+index 7f88862..2f45e65 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -60,6 +60,10 @@ standalone = [
+ name = "Georg Brandl"
+ email = "georg@python.org"
  
-+[options.entry_points]
-+sphinx.builders =
-+    json = sphinxcontrib.serializinghtml
-+    pickle = sphinxcontrib.serializinghtml
++[project.entry-points."sphinx.builders"]
++json = "sphinxcontrib.serializinghtml"
++pickle = "sphinxcontrib.serializinghtml"
++
+ [tool.flit.module]
+ name = "sphinxcontrib.serializinghtml"
+ 
