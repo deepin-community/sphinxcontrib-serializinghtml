@@ -3,6 +3,8 @@
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
-override_dh_auto_build:
-	python3 setup.py compile_catalog
-	dh_auto_build
+execute_before_dh_auto_build:
+	pybabel-python3 compile \
+		--domain=sphinxcontrib.serializinghtml \
+		--directory=sphinxcontrib/serializinghtml/locales/ \
+		--use-fuzzy
